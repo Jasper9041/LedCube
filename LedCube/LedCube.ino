@@ -6,8 +6,9 @@ const int clockPin = D5;
 const int latchPin = D0;
 FrameBuffer buff;
 
-uint8_t currentLayer = 0;
-uint8_t dir = 1;
+// uint8_t currentLayer = 0;
+// uint8_t dir = 1;
+// uint8_t indexx = 0;
 long lastMillis = 0;
 
 void setup()  {
@@ -21,7 +22,7 @@ void setup()  {
   Serial.begin(115200);
 
   buff = FrameBuffer();
-  // buff.setPixel(true, 0, 0, 0);
+  // buff.setPixel(true, 0, 2, 0);
   // buff.setPixel(true, 1, 1, 1);
   // buff.setPixel(true, 2, 2, 2);
   // buff.setPixel(true, 3, 3, 3);
@@ -30,23 +31,30 @@ void setup()  {
 
 void loop() {
   if (millis() - lastMillis > 150) {
-    for(uint8_t layer = 0; layer < NUMBER_OF_LAYERS; layer++) {
-      if (layer <= currentLayer) {
-        buff.setHorizontalLayer(true, layer);
-      } else {
-        buff.setHorizontalLayer(false, layer);
-      }
-    }
+    buff.draw2DLine(true, 0, 0, 3, 2, 3);
+    // buff.setPixelByIndex(true, indexx, 0);
+    // indexx= indexx+1;
+    // if (indexx == 16) indexx = 0;
 
-    if (currentLayer == 3) {
-      dir = -1;
-    }
+    // index = (index + 1) % (uint8_t)16;
+    
+  //   for(uint8_t layer = 0; layer < NUMBER_OF_LAYERS; layer++) {
+  //     if (layer <= currentLayer) {
+  //       buff.setHorizontalLayer(true, layer);
+  //     } else {
+  //       buff.setHorizontalLayer(false, layer);
+  //     }
+  //   }
 
-    if (currentLayer == 0) {
-      dir = 1;
-    }
+  //   if (currentLayer == 3) {
+  //     dir = -1;
+  //   }
 
-    currentLayer = (currentLayer + dir);
+  //   if (currentLayer == 0) {
+  //     dir = 1;
+  //   }
+
+  //   currentLayer = (currentLayer + dir);
 
     lastMillis = millis();
   }
@@ -62,7 +70,7 @@ void render() {
 
     Serial.printf("layer: %d ", layer);
 
-    for (int j = 0; j < inputs.size(); j++){
+    for (int j = inputs.size() - 1; j >=0 ; j--){
       Serial.print(inputs[j], BIN);
       Serial.print(" ");
       SPI.transfer(inputs[j]);
