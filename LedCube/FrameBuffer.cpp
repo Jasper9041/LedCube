@@ -8,15 +8,15 @@ namespace geometricFunc {
 
 FrameBuffer::FrameBuffer() {
     std::bitset<NUMBER_OF_PIXELS_PER_LAYER> tmp_bitset;
-    for (size_t i = 0; i < NUMBER_OF_LAYERS ; i++){
+    for (size_t layer = 0; layer < NUMBER_OF_LAYERS ; layer++){
         pixels.push_back(tmp_bitset);
     }
 }
 
 std::vector<uint8_t> FrameBuffer::TranslateLayerFromBitset(uint8_t layer) const {
     std::vector<uint8_t> out_vec;
-    // out_vec.push_back(1 << (layer + 4));
-    out_vec.push_back(1 << layer);
+    out_vec.push_back(1 << (layer + 4));
+    // out_vec.push_back(1 << layer);
     uint8_t tmp_byte = 0;
 
     for(size_t i = 0; i < NUMBER_OF_PIXELS_PER_LAYER; i++) {
@@ -61,4 +61,15 @@ void FrameBuffer::draw2DLine(bool new_state, uint8_t x1, uint8_t y1, uint8_t x2,
             setPixel(new_state, x, y, z);
         }
     }
+}
+
+void FrameBuffer::setAll(bool new_state) {
+    std::bitset<NUMBER_OF_PIXELS_PER_LAYER> tmp_bitset;
+    for (size_t layer = 0; layer < NUMBER_OF_LAYERS ; layer++){
+        pixels[layer] = tmp_bitset;
+    }
+}
+
+void FrameBuffer::clear() {
+    setAll(false);
 }

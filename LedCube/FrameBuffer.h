@@ -14,6 +14,8 @@ class FrameBuffer {
         FrameBuffer();
         std::vector<uint8_t> TranslateLayerFromBitset(uint8_t layer) const;
 
+        void clear();
+        void setAll(bool new_state);
         void setPixel(bool new_state, uint8_t x, uint8_t y, uint8_t z);
         void setHorizontalLayer(bool new_state, uint8_t layer);
         void draw2DLine(bool new_state, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t z);

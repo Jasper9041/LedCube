@@ -6,6 +6,9 @@ const int clockPin = D5;
 const int latchPin = D0;
 FrameBuffer buff;
 
+uint8_t currentLayer = 0;
+long lastMillis = 0;
+
 void setup()  {
   pinMode(dataPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
@@ -17,19 +20,22 @@ void setup()  {
   Serial.begin(115200);
 
   buff = FrameBuffer();
-  buff.setPixel(true, 0, 0, 0);
-  buff.setPixel(true, 1, 1, 1);
-  buff.setPixel(true, 2, 2, 2);
-  buff.setPixel(true, 3, 3, 3);
+  // buff.setPixel(true, 0, 0, 0);
+  // buff.setPixel(true, 1, 1, 1);
+  // buff.setPixel(true, 2, 2, 2);
+  // buff.setPixel(true, 3, 3, 3);
+  // buff.setHorizontalLayer(true, 3);
 }
 
 void loop() {
-  // buff.setPixel(true, 0, 0, 0);
-  // buff.setPixel(true, 1, 1, 1);
-  // buff.setHorizontalLayer(true, 0);
-  // buff.setPixel(true, 1, 1, 0);
-  
-  
+  if (millis() - lastMillis > 100) {
+    buff.clear();
+    buff.setHorizontalLayer(true, currentLayer);
+    currentLayer = (currentLayer + 1) % NUMBER_OF_LAYERS;
+
+    lastMillis = millis();
+  }
+
   render();
 }
 
