@@ -7,6 +7,7 @@ const int latchPin = D0;
 FrameBuffer buff;
 
 uint8_t currentLayer = 0;
+uint8_t dir = 1;
 long lastMillis = 0;
 
 void setup()  {
@@ -28,10 +29,24 @@ void setup()  {
 }
 
 void loop() {
-  if (millis() - lastMillis > 100) {
-    buff.clear();
-    buff.setHorizontalLayer(true, currentLayer);
-    currentLayer = (currentLayer + 1) % NUMBER_OF_LAYERS;
+  if (millis() - lastMillis > 150) {
+    for(uint8_t layer = 0; layer < NUMBER_OF_LAYERS; layer++) {
+      if (layer <= currentLayer) {
+        buff.setHorizontalLayer(true, layer);
+      } else {
+        buff.setHorizontalLayer(false, layer);
+      }
+    }
+
+    if (currentLayer == 3) {
+      dir = -1;
+    }
+
+    if (currentLayer == 0) {
+      dir = 1;
+    }
+
+    currentLayer = (currentLayer + dir);
 
     lastMillis = millis();
   }
