@@ -19,7 +19,9 @@ class FrameBuffer {
         void setPixel(bool new_state, uint8_t x, uint8_t y, uint8_t z);
         void setPixelByIndex(bool new_state, uint8_t index, uint8_t layer);
         void setHorizontalLayer(bool new_state, uint8_t layer);
-        void draw2DLine(bool new_state, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t z);
+        void drawLine(bool new_state, uint8_t x1, uint8_t y1, uint8_t z1, uint8_t x2, uint8_t y2, uint8_t z2, bool readyToDraw=false);
+        // void FrameBuffer::setPlane(bool new_state, std::vector<uint8_t> line1_start, std::vector<uint8_t> line1_end,
+        //                                     std::vector<uint8_t> line2_start);
     private:
         std::vector<std::bitset<NUMBER_OF_PIXELS_PER_LAYER>> pixels;
 };

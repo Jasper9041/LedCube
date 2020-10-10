@@ -1,7 +1,7 @@
 #include "FrameBuffer.h"
 
 namespace geometricFunc {
-    const float GetYForLine(float x, float x1, float y1, float x2, float y2) {
+    const float GetSecondCoordinateForLine(float x, float x1, float y1, float x2, float y2) {
         return (((y2-y1)/(x2-x1))*(x-x1))+y1;
     }
 }
@@ -56,27 +56,46 @@ void FrameBuffer::setHorizontalLayer(bool new_state, uint8_t layer) {
     }
 }
 
-void FrameBuffer::draw2DLine(bool new_state, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t z) {
-    if (x2-x1 > y2-y1){
+void FrameBuffer::drawLine(bool new_state, uint8_t x1, uint8_t y1, uint8_t z1, uint8_t x2, uint8_t y2, uint8_t z2, bool readyToDraw) {
+    if (std::abs(x1-x2) > std::abs(y1-y2) && std::abs(x1-x2) > std::abs(z1-z2)){
         for(uint8_t x = x1; x <= x2; x++){
-            float y = geometricFunc::GetYForLine(x, x1, y1, x2, y2);
+            if (x < 0 || x >= NUMBER_OF_PIXELS_PER_AXIS) continue;
+            float y = geometricFunc::GetSecondCoordinateForLine(x, x1, y1, x2, y2);
             uint8_t rounded_y = round(y);
-            setPixel(new_state, x, rounded_y, z);
+            float z = geometricFunc::GetSecondCoordinateForLine(x, x1, z1, x2, z2);
+            uint8_t rounded_z = round(z);
+            setPixel(new_state, x, rounded_y, rounded_z);
+        }
+    }
+    else if (std::abs(y1-y2) > std::abs(x1-x2) && std::abs(y1-y2) > std::abs(z1-z2)){
+        for(uint8_t y = y1; y <= y2; y++){
+            if (y < 0 || y >= NUMBER_OF_PIXELS_PER_AXIS) continue;
+            float x = geometricFunc::GetSecondCoordinateForLine(y, y1, x1, y2, x2);
+            uint8_t rounded_x = round(x);
+            float z = geometricFunc::GetSecondCoordinateForLine(y, y1, z1, y2, z2);
+            uint8_t rounded_z = round(z);
+            setPixel(new_state, rounded_x, y, rounded_z);
         }
     }
     else{
-        for(uint8_t y = y1; y <= y2; y++){
-            float x = geometricFunc::GetYForLine(y, y1, x1, y2, x2);
+        for(uint8_t z = z1; z <= z2; z++){
+            if (z < 0 || z >= NUMBER_OF_PIXELS_PER_AXIS) continue;
+            float x = geometricFunc::GetSecondCoordinateForLine(z, z1, x1, z2, x2);
             uint8_t rounded_x = round(x);
-            setPixel(new_state, rounded_x, y, z);
+            float y = geometricFunc::GetSecondCoordinateForLine(z, z1, y1, z2, y2);
+            uint8_t rounded_y = round(y);
+            setPixel(new_state, rounded_x, rounded_y, z);
         }
     }
 }
 
+// void FrameBuffer::setPlane(bool new_state, std::vector<uint8_t> line1_start, std::vector<uint8_t> line1_end, std::vector<uint8_t> line2_start){
+//     ;
+// }
+
 void FrameBuffer::setAll(bool new_state) {
-    std::bitset<NUMBER_OF_PIXELS_PER_LAYER> tmp_bitset;
     for (size_t layer = 0; layer < NUMBER_OF_LAYERS ; layer++){
-        pixels[layer] = tmp_bitset;
+        setHorizontalLayer(true, layer);    
     }
 }
 
